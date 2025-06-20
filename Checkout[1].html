@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Checkout - Easebuy Shopping</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-green-500 to-blue-500 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Easebuy Shopping</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="index.html" class="hover:underline">Home</a></li>
+          <li><a href="Contact-us.html" class="hover:underline">Contact us</a></li>
+          <li><a href="cart.html" class="hover:underline">Cart</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Checkout Form -->
+  <section class="container mx-auto px-4 py-10">
+    <h2 class="text-2xl font-bold mb-6 text-center">Checkout</h2>
+
+    <!-- Order Summary -->
+    <div class="bg-white p-6 rounded-2xl shadow-md mb-8">
+      <h3 class="text-lg font-semibold mb-4">Order Summary</h3>
+      <ul id="summary-list" class="space-y-2 mb-4"></ul>
+      <p class="font-bold">Total: ₵<span id="summary-total">0</span></p>
+    </div>
+
+    <!-- Customer Details -->
+    <div class="grid md:grid-cols-2 gap-8">
+      <form id="checkout-form" class="bg-white p-6 rounded-2xl shadow-md">
+        <h3 class="text-lg font-semibold mb-4">Customer Information</h3>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium">Name</label>
+          <input type="text" required class="w-full mt-1 p-2 border rounded" name="name" placeholder="e.g., Saiba Alhassan">
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium">Phone Number</label>
+          <input type="tel" required class="w-full mt-1 p-2 border rounded" name="phone" placeholder="eg. 0554XXXXXX">
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium">Delivery Address</label>
+          <textarea required class="w-full mt-1 p-2 border rounded" name="address" placeholder="eg. Obuasi Bongobri"></textarea>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium">Town</label>
+          <input type="text" required class="w-full mt-1 p-2 border rounded" name="town" placeholder="e.g., Obuasi">
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium">GPS Address <span class="text-sm text-gray-500">(optional)</span></label>
+          <input type="text" class="w-full mt-1 p-2 border rounded" name="gps" placeholder="e.g., GA-123-4567">
+        </div>
+
+        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Place Order</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-4 mt-10">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2025 Easebuy Shopping. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    const summaryList = document.getElementById("summary-list");
+    const summaryTotal = document.getElementById("summary-total");
+    const cart = JSON.parse(localStorage.getItem("easebuy-cart")) || [];
+
+    let total = 0;
+    cart.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} x${item.qty} = ₵${item.price * item.qty}`;
+      summaryList.appendChild(li);
+      total += item.price * item.qty;
+    });
+    summaryTotal.textContent = total;
+
+    function generateReferenceID() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let id = '';
+      for (let i = 0; i < 6; i++) {
+        id += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return 'EBX-' + id;
+    }
+
+    document.getElementById("checkout-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = this.name.value.trim();
+      const phone = this.phone.value.trim();
+      const address = this.address.value.trim();
+      const town = this.town.value.trim();
+      const gps = this.gps.value.trim();
+      const referenceID = generateReferenceID();
+
+      let message = `🛒 *Easebuy Order*%0A`;
+      message += `🆔 Ref: ${referenceID}%0A`;
+      message += `👤 Name: ${name}%0A📞 Phone: ${phone}%0A🏠 Address: ${address}, ${town}%0A`;
+      if (gps) message += `📍 GPS: ${gps}%0A`;
+      message += `%0A🛍 *Order Details:*%0A`;
+
+      cart.forEach(item => {
+        message += `- ${item.name} x${item.qty} = ₵${item.price * item.qty}%0A`;
+      });
+
+      message += `%0A💰 *Total:* ₵${total}`;
+
+      const whatsappNumber = "233554995469"; // Your WhatsApp number without +
+      const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+      window.open(whatsappURL, "_blank");
+
+      // Clear cart
+      localStorage.removeItem("easebuy-cart");
+
+      // Optional: Alert
+      setTimeout(() => {
+        alert(`Order sent successfully!\nReference ID: ${referenceID}`);
+        window.location.href = "index.html";
+      }, 1000);
+    });
+  </script>
+</body>
+</html>
