@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Electronics - Easebuy Shopping</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-green-500 to-blue-500 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Easebuy Shopping</h1>
+      <nav>
+        <ul class="flex space-x-3">
+          <li><a href="index.html" class="hover:underline font-bold">Home</a></li>
+          <li><a href="cart.html" class="hover:underline font-bold flex items-center">Cart
+            <span id="cart-count" class="ml-1 bg-red-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full">0</span>
+          </a></li>
+          <li><a href="contact-us.html" class="hover:underline">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Title -->
+  <section class="container mx-auto px-4 py-8 text-center">
+    <h2 class="text-3xl font-bold mb-2">Electronics</h2>
+    <p class="text-gray-600">Browse our selection of the latest gadgets and electronic devices.</p>
+  </section>
+
+  <!-- Product Grid -->
+  <section class="container mx-auto px-4 pb-12">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+      <!-- Sample Product -->
+      <div class="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
+        <img src="images/sample-phone.jpg" alt="Phone" class="w-full h-40 object-cover rounded mb-2">
+        <h4 class="font-semibold text-lg">Tecno Spark 5</h4>
+        <p class="text-gray-500">₵1,200</p>
+        <button class="mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 w-full"
+          data-name="Tecno Spark 5" data-price="1200" data-image="images/sample-phone.jpg">Add to Cart</button>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
+        <img src="IMG_20250131_234651.jpg" alt="Laptop" class="w-full h-40 object-cover rounded mb-2">
+        <h4 class="font-semibold text-lg">Dell Core i3</h4>
+        <p class="text-gray-500">₵3,500</p>
+        <button class="mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 w-full"
+          data-name="Dell Core i3" data-price="3500" data-image="IMG_20250131_234651.jpg">Add to Cart</button>
+      </div>
+
+      <div class="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
+        <img src="images/sample-phone.jpg" alt="Phone" class="w-full h-40 object-cover rounded mb-2">
+        <h4 class="font-semibold text-lg">Smartphone XYZ</h4>
+        <p class="text-gray-500">₵1,200</p>
+        <button class="mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 w-full"
+          data-name="Smartphone XYZ" data-price="1200" data-image="images/sample-phone.jpg">Add to Cart</button>
+      </div>
+
+      <!-- Repeat more products as needed -->
+      <!-- Example -->
+      <div class="bg-white p-4 rounded-2xl shadow hover:shadow-lg transition">
+        <img src="images/sample-laptop.jpg" alt="Laptop" class="w-full h-40 object-cover rounded mb-2">
+        <h4 class="font-semibold text-lg">Laptop Pro 15"</h4>
+        <p class="text-gray-500">₵3,500</p>
+        <button class="mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 w-full"
+          data-name="Laptop Pro 15&quot;" data-price="3500" data-image="images/sample-laptop.jpg">Add to Cart</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-4">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2025 Easebuy Shopping. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('easebuy-cart')) || [];
+      const count = cart.reduce((acc, item) => acc + item.qty, 0);
+      const counter = document.getElementById('cart-count');
+      if (counter) counter.textContent = count;
+    }
+
+    // Call on page load
+    updateCartCount();
+  </script>
+
+  <script>
+    const addToCartButtons = document.querySelectorAll("button[data-name]");
+    addToCartButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        const name = button.getAttribute("data-name");
+        const price = parseFloat(button.getAttribute("data-price"));
+        const image = button.getAttribute("data-image");
+
+        let cart = JSON.parse(localStorage.getItem("easebuy-cart")) || [];
+        const existingItem = cart.find(item => item.name === name);
+        if (existingItem) {
+          existingItem.qty += 1;
+        } else {
+          cart.push({ name, price, image, qty: 1 });
+        }
+
+        localStorage.setItem("easebuy-cart", JSON.stringify(cart));
+        updateCartCount();
+        alert(`${name} added to cart!`);
+      });
+    });
+  </script>
+
+</body>
+</html>
