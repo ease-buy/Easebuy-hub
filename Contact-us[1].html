@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Us - Easebuy Shopping</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-green-500 to-blue-500 text-white p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">Easebuy Shopping</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="index.html" class="hover:underline">Home</a></li>
+          <li><a href="cart.html" class="hover:underline">Cart<span id="cart-count" class="ml-1 bg-red-600 text-white text-xs font-semibold px-2 py-0.5 rounded-full">0</span></a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contact Form Section -->
+  <section class="py-12">
+    <div class="container mx-auto px-4 max-w-2xl bg-white shadow-lg rounded-2xl p-8">
+      <h2 class="text-3xl font-bold mb-6 text-center">Contact Us</h2>
+
+      <!-- Contact Info -->
+      <div class="mb-6 text-center text-gray-700 space-y-2">
+        <p><i class="fas fa-envelope text-blue-500 mr-2"></i> Email: <a href="mailto:easebuy500@gmail.com" class="text-blue-600 hover:underline">easebuy500@gmail.com</a></p>
+        <p><i class="fas fa-phone text-green-500 mr-2"></i> Call/WhatsApp: <a href="tel:+233554995469" class="text-green-600 hover:underline">+233 55 499 5469</a></p>
+        <div class="flex justify-center space-x-4 text-xl mt-4">
+          <a href="https://wa.me/233554995469" target="_blank" class="text-green-500 hover:text-green-600"><i class="fab fa-whatsapp"></i></a>
+         
+        </div>
+      </div>
+
+      <!-- Form -->
+      <form class="space-y-4" onsubmit="sendWhatsAppMessage(event)">
+        <div>
+          <label class="block mb-1 font-semibold">Your Name</label>
+          <input type="text" id="name" class="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="Enter your name" required />
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold">Email Address</label>
+          <input type="email" id="email" class="w-full border border-gray-300 rounded-lg px-4 py-2" placeholder="Enter your email" required />
+        </div>
+        <div>
+          <label class="block mb-1 font-semibold">Message</label>
+          <textarea id="message" class="w-full border border-gray-300 rounded-lg px-4 py-2" rows="4" placeholder="Your message" required></textarea>
+        </div>
+        <div class="text-center">
+          <button type="submit" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600">Send Message</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-4">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2025 Easebuy Shopping. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Cart Count -->
+  <script>
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('easebuy-cart')) || [];
+      const count = cart.reduce((acc, item) => acc + item.qty, 0);
+      const counter = document.getElementById('cart-count');
+      if (counter) counter.textContent = count;
+    }
+    updateCartCount();
+  </script>
+
+  <!-- WhatsApp Script -->
+  <script>
+    function sendWhatsAppMessage(event) {
+      event.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message').value.trim();
+
+      const phoneNumber = "233554995469";
+      const fullMessage = `Easebuy Contact Form Message:\n\nName: ${name}\nEmail: ${email}\nMessage: ${message}`;
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(fullMessage)}`;
+
+      window.open(url, "_blank");
+    }
+  </script>
+
+</body>
+</html>
