@@ -1,28 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" type="image/png" sizes="512x512" href="eb.jpg">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout - Easebuy Shopping</title>
+  <title>Checkout - Campus Business Network</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-100 text-gray-800">
+
   <!-- Header -->
   <header class="bg-gradient-to-r from-green-500 to-blue-500 text-white p-4">
     <div class="container mx-auto flex justify-between items-center">
-      <h1 class="text-2xl font-bold">Easebuy Shopping</h1>
+      <h1 class="text-2xl font-bold">Campus Business Network</h1>
       <nav>
         <ul class="flex space-x-4">
           <li><a href="index.html" class="hover:underline">Home</a></li>
-          <li><a href="Contact-us.html" class="hover:underline">Contact us</a></li>
           <li><a href="cart.html" class="hover:underline">Cart</a></li>
+          <li><a href="Contact-us.html" class="hover:underline">contact-us</a></li>
         </ul>
       </nav>
     </div>
   </header>
 
-  <!-- Checkout Form -->
+  <!-- Checkout Section -->
   <section class="container mx-auto px-4 py-10">
     <h2 class="text-2xl font-bold mb-6 text-center">Checkout</h2>
 
@@ -39,39 +40,123 @@
         <h3 class="text-lg font-semibold mb-4">Customer Information</h3>
 
         <div class="mb-4">
-          <label class="block text-sm font-medium">Name</label>
-          <input type="text" required class="w-full mt-1 p-2 border rounded" name="name" placeholder="e.g., Saiba Alhassan">
+          <label class="block text-sm font-medium">Full Name</label>
+          <input type="text" required class="w-full mt-1 p-2 border rounded" name="name">
         </div>
 
         <div class="mb-4">
           <label class="block text-sm font-medium">Phone Number</label>
-          <input type="tel" required class="w-full mt-1 p-2 border rounded" name="phone" placeholder="eg. 0554XXXXXX">
+          <input type="tel" required class="w-full mt-1 p-2 border rounded" name="phone">
         </div>
 
         <div class="mb-4">
           <label class="block text-sm font-medium">Delivery Address</label>
-          <textarea required class="w-full mt-1 p-2 border rounded" name="address" placeholder="eg. Obuasi Bongobri"></textarea>
+          <textarea required class="w-full mt-1 p-2 border rounded" name="address"></textarea>
         </div>
 
         <div class="mb-4">
           <label class="block text-sm font-medium">Town</label>
-          <input type="text" required class="w-full mt-1 p-2 border rounded" name="town" placeholder="e.g., Obuasi">
+          <input type="text" required class="w-full mt-1 p-2 border rounded" name="town">
         </div>
 
         <div class="mb-4">
-          <label class="block text-sm font-medium">GPS Address <span class="text-sm text-gray-500">(optional)</span></label>
-          <input type="text" class="w-full mt-1 p-2 border rounded" name="gps" placeholder="e.g., GA-123-4567">
+          <label class="block text-sm font-medium">GPS Address (Optional)</label>
+          <input type="text" class="w-full mt-1 p-2 border rounded" name="gps">
         </div>
 
-        <button type="submit" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Place Order</button>
+        <button type="submit"
+          class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 w-full">
+          Place Order
+        </button>
       </form>
     </div>
   </section>
 
->
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-4 mt-10">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2026 Campus Business Network. All rights reserved.</p>
+    </div>
+  </footer>
 
-  <!-- Offline Payment Info -->
-  <section class="bg-yellow-100 py-6">
+<script>
+
+  const summaryList = document.getElementById("summary-list");
+  const summaryTotal = document.getElementById("summary-total");
+  const cart = JSON.parse(localStorage.getItem("cbn-cart")) || [];
+
+  let total = 0;
+
+  // Render Order Summary
+  if (cart.length === 0) {
+    summaryList.innerHTML = "<li class='text-gray-500'>Your cart is empty.</li>";
+  } else {
+    cart.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} x${item.qty} = ₵${item.price * item.qty}`;
+      summaryList.appendChild(li);
+      total += item.price * item.qty;
+    });
+  }
+
+  summaryTotal.textContent = total;
+
+  // Generate CBN Order ID (6 digits only)
+  function generateReferenceID() {
+    const min = 100000;
+    const max = 999999;
+    const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+    return "CBN-" + randomNumber;
+  }
+
+  // Submit Checkout
+  document.getElementById("checkout-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    const name = this.name.value.trim();
+    const phone = this.phone.value.trim();
+    const address = this.address.value.trim();
+    const town = this.town.value.trim();
+    const gps = this.gps.value.trim();
+
+    const referenceID = generateReferenceID();
+
+    let message = `🛒 *Campus Business Network Order*\n`;
+    message += `🆔 Ref: ${referenceID}\n\n`;
+    message += `👤 Name: ${name}\n`;
+    message += `📞 Phone: ${phone}\n`;
+    message += `🏠 Address: ${address}, ${town}\n`;
+    if (gps) message += `📍 GPS: ${gps}\n`;
+
+    message += `\n🛍 Order Details:\n`;
+
+    cart.forEach(item => {
+      message += `- ${item.name} x${item.qty} = ₵${item.price * item.qty}\n`;
+    });
+
+    message += `\n💰 Total: ₵${total}`;
+
+    const whatsappNumber = "233554995469";
+    const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+
+    window.open(whatsappURL, "_blank");
+
+  
+    localStorage.removeItem("cbn-cart");
+
+    setTimeout(() => {
+      alert(`Order sent successfully!\nReference ID: ${referenceID}`);
+      window.location.href = "index.html";
+    }, 1000);
+  });
+
+</script>
+<section class="bg-yellow-100 py-6">
     <div class="container mx-auto px-4 text-center">
       <p class="text-yellow-800 font-semibold">We accept offline payment. Place your order and pay on delivery!</p>
        <div class="my-6">
@@ -81,11 +166,10 @@
 
     <div class="bg-blue-100 rounded-xl p-4 mt-6">
       <h3 class="font-bold text-gray-700 mb-2">Contact Us</h3>
-      <p class="text-sm"><i class="fas fa-envelope text-blue-500 mr-2"></i>easebuy500@gmail.com</p>
+      <p class="text-sm"><i class="fas fa-envelope text-blue-500 mr-2"></i>campusbusinessgmail.com</p>
       <p class="text-sm"><i class="fas fa-phone text-green-600 mr-2"></i>+233 55 499 5469</p>
       <div class="flex justify-center mt-3 space-x-4 text-xl">
         <a href="https://wa.me/233554995469" target="_blank" class="text-green-500 hover:text-green-600"><i class="fab fa-whatsapp"></i></a>
-        <a href="https://facebook.com/easebuyshop" target="_blank" class="text-blue-700 hover:text-blue-800"><i class="fab fa-facebook"></i></a>
       </div>
     </div>
   </div>
@@ -96,70 +180,9 @@
   <!-- Footer -->
   <footer class="bg-gray-800 text-white py-4">
     <div class="container mx-auto px-4 text-center">
-      <p>&copy; 2025 Easebuy Shopping. All rights reserved.</p>
+      <p>&copy; 2026 Campus Business Network. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- Script -->
-  <script>
-    const summaryList = document.getElementById("summary-list");
-    const summaryTotal = document.getElementById("summary-total");
-    const cart = JSON.parse(localStorage.getItem("easebuy-cart")) || [];
-
-    let total = 0;
-    cart.forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} x${item.qty} = ₵${item.price * item.qty}`;
-      summaryList.appendChild(li);
-      total += item.price * item.qty;
-    });
-    summaryTotal.textContent = total;
-
-    function generateReferenceID() {
-      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-      let id = '';
-      for (let i = 0; i < 6; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      return 'EBX-' + id;
-    }
-
-    document.getElementById("checkout-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const name = this.name.value.trim();
-      const phone = this.phone.value.trim();
-      const address = this.address.value.trim();
-      const town = this.town.value.trim();
-      const gps = this.gps.value.trim();
-      const referenceID = generateReferenceID();
-
-      let message = `🛒 *Easebuy Order*%0A`;
-      message += `🆔 Ref: ${referenceID}%0A`;
-      message += `👤 Name: ${name}%0A📞 Phone: ${phone}%0A🏠 Address: ${address}, ${town}%0A`;
-      if (gps) message += `📍 GPS: ${gps}%0A`;
-      message += `%0A🛍 *Order Details:*%0A`;
-
-      cart.forEach(item => {
-        message += `- ${item.name} x${item.qty} = ₵${item.price * item.qty}%0A`;
-      });
-
-      message += `%0A💰 *Total:* ₵${total}`;
-
-      const whatsappNumber = "233554995469"; // Your WhatsApp number without +
-      const whatsappURL = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-
-      window.open(whatsappURL, "_blank");
-
-      // Clear cart
-      localStorage.removeItem("easebuy-cart");
-
-      // Optional: Alert
-      setTimeout(() => {
-        alert(`Order sent successfully!\nReference ID: ${referenceID}`);
-        window.location.href = "index.html";
-      }, 1000);
-    });
-  </script>
 </body>
 </html>
